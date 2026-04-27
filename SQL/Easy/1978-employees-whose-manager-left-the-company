@@ -1,0 +1,28 @@
+sql
+/*
+    # 1978. Employees Whose Manager Left the Company
+    # Difficulty: Easy
+    # Link: https://leetcode.com/problems/employees-whose-manager-left-the-company/
+    # Topics: LEFT JOIN, IS NULL
+
+    # Problem:
+    Find the IDs of the employees whose salary is strictly less than $30000
+    AND whose manager left the company.
+
+    # Schema:
+    Employees (employee_id int, name varchar, manager_id int, salary int)
+
+    # Note:
+    When a manager leaves the company, their row is deleted from the Employees table.
+    The employees still have their manager_id set to the person who left.
+    Return the result table ordered by employee_id.
+*/
+
+-- Solution: LEFT JOIN with IS NULL
+SELECT e1.employee_id
+FROM Employees e1
+LEFT JOIN Employees e2 ON e1.manager_id = e2.employee_id
+WHERE e1.salary < 30000 
+  AND e1.manager_id IS NOT NULL
+  AND e2.employee_id IS NULL
+ORDER BY e1.employee_id;
