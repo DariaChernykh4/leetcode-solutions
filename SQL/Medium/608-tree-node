@@ -1,0 +1,27 @@
+/*
+    # 608. Tree Node
+    # Difficulty: Medium
+    # Link: https://leetcode.com/problems/tree-node/
+    # Topics: CASE, LEFT JOIN
+
+    # Problem:
+    Each node in the tree can be one of three types:
+    - "Leaf": if the node is not a parent to any other node
+    - "Root": if the node has no parent (p_id is NULL)
+    - "Inner": if the node has a parent and is a parent to at least one other node
+
+    # Schema:
+    Tree (id int, p_id int)
+*/
+
+SELECT 
+    id,
+    CASE 
+        WHEN p_id IS NULL THEN 'Root' 
+        WHEN id NOT IN (
+            SELECT DISTINCT p_id FROM Tree WHERE p_id IS NOT NULL
+            )
+        THEN 'Leaf'
+        ELSE 'Inner' 
+    END AS type
+FROM Tree
