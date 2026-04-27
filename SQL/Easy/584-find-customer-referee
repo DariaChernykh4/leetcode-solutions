@@ -1,0 +1,20 @@
+sql
+/*
+    # 584. Find Customer Referee
+    # Difficulty: Easy
+    # Link: https://leetcode.com/problems/find-customer-referee/
+    # Topics: WHERE
+
+    # Problem:
+    Find the names of the customer that are either:
+    - referred by any customer with id != 2.
+    - not referred by any customer.
+
+    # Schema:
+    Customer (id int, name varchar, referee_id int)
+*/
+
+-- Solution 1: WHERE with != AND IS NULL
+SELECT name
+FROM Customer
+WHERE referee_id != 2 OR referee_id IS NULL;
