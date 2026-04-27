@@ -1,0 +1,18 @@
+/*
+    # 596. Classes More Than 5 Students
+    # Difficulty: Easy
+    # Link: https://leetcode.com/problems/classes-more-than-5-students/
+    # Topics: GROUP BY, HAVING
+
+    # Problem:
+    Find all the classes that have at least five students.
+
+    # Schema:
+    Courses (student varchar, class varchar)
+*/
+
+-- Solution: GROUP BY with HAVING
+SELECT class
+FROM Courses
+GROUP BY class
+HAVING COUNT(student) >= 5;
