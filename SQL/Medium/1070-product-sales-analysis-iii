@@ -1,0 +1,28 @@
+/*
+    # 1070. Product Sales Analysis III
+    # Difficulty: Medium
+    # Link: https://leetcode.com/problems/product-sales-analysis-iii
+    # Topics: Window Functions, RANK, CTE
+
+    # Problem:
+    For each product, find the year of the first sale and the corresponding quantity and price.
+
+    # Schema:
+    Sales (sale_id int, product_id int, year int, quantity int, price int)
+    Product (product_id int, product_name varchar)
+*/
+
+WITH ranked AS (
+    SELECT 
+        *,
+        RANK() OVER(PARTITION BY product_id ORDER BY year ASC) AS rnk
+    FROM Sales
+)
+
+SELECT
+    product_id,
+    year AS first_year,
+    quantity,
+    price
+FROM ranked 
+WHERE rnk = 1;
