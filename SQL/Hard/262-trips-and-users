@@ -1,0 +1,42 @@
+/*
+    # 262. Trips and Users
+    # Difficulty: Hard
+    # Link: https://leetcode.com/problems/trips-and-users/
+    # Topics: CTE, JOIN, Subquery, CASE, Aggregation
+
+    # Problem:
+    The cancellation rate is computed by dividing the number of canceled 
+    requests (by client or driver) with unbanned users by the total number 
+    of requests with unbanned users on that day.
+    
+    Write a SQL query to find the cancellation rate of requests with 
+    unbanned users (both client and driver must not be banned) 
+    between "2013-10-01" and "2013-10-03". Round to two decimal places.
+
+    # Schema:
+    Trips (id int, client_id int, driver_id int, city_id int, status varchar, request_at varchar)
+    Users (users_id int, banned varchar, role varchar)
+*/
+
+WITH active_users AS(
+    SELECT 
+        t.id,
+        t.status,
+        t.request_at 
+    FROM Users AS u
+    JOIN Trips AS t
+        ON u.users_id = t.client_id
+        WHERE u.banned = 'No'
+            AND t.driver_id IN(
+                SELECT users_id
+                FROM Users
+                WHERE role = 'driver' AND banned = 'No'
+            )
+            AND t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+)
+
+SELECT 
+    request_at AS Day,
+    ROUND(SUM(CASE WHEN status != 'completed' THEN 1 ELSE 0 END) / COUNT(*), 2) AS 'Cancellation Rate'
+FROM active_users
+GROUP BY request_at;
