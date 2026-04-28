@@ -19,6 +19,6 @@ WITH nums AS (
     FROM Logs
 )
 
-SELECT ConsecutiveNums
+SELECT DISTINCT ConsecutiveNums
 FROM nums
 WHERE ConsecutiveNums IS NOT NULL;
