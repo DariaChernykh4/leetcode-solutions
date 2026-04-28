@@ -1,0 +1,33 @@
+/*
+    # 601. Human Traffic of Stadium
+    # Difficulty: Hard
+    # Link: https://leetcode.com/problems/human-traffic-of-stadium
+    # Topics: Window Functions, LAG, LEAD, CTE
+
+    # Problem:
+    Find records with 3 or more consecutive rows where people >= 100
+    and order by visit_date
+
+    # Schema:
+    Stadium (id int, visit_date date, people int)
+*/
+
+WITH ranked AS (
+    SELECT 
+        *,
+        LAG(id, 1) OVER(ORDER BY id) AS prev_id,
+        LAG(id, 2) OVER(ORDER BY id) AS prev_id2,
+        LEAD(id, 1) OVER(ORDER BY id) AS next_id,
+        LEAD(id, 2) OVER(ORDER BY id) AS next_id2
+    FROM Stadium
+    WHERE people >= 100
+)
+SELECT 
+    id,
+    visit_date,
+    people
+FROM ranked
+WHERE (prev_id = id - 1 AND prev_id2 = id - 2)
+   OR (prev_id = id - 1 AND next_id = id + 1)   
+   OR (next_id = id + 1 AND next_id2 = id + 2)
+ORDER BY visit_date;
